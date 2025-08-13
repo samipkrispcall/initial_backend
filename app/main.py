@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 
 from app.config.db import engine
 from app.urls import url_user, url_author, url_book
-from app.middlewares import mw_request_logger
+from app.middlewares import mw_request_logger, mw_db_session
 
 
 @asynccontextmanager
@@ -20,3 +20,4 @@ app = Starlette(
 )
 
 app.add_middleware(mw_request_logger.LoggingMiddleware)
+app.add_middleware(mw_db_session.DBSessionMiddleware)
