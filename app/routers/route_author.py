@@ -1,6 +1,5 @@
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-from starlette.routing import Route
 
 from app.repositories.repo_author import AuthorRepository
 from app.schemas import schema_author
