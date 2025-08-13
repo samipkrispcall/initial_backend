@@ -9,7 +9,11 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "uvicorn (>=0.35.0,<0.36.0)",
-    "starlette (>=0.47.2,<0.48.0)"
+    "starlette (>=0.47.2,<0.48.0)",
+    "passlib (>=1.7.4,<2.0.0)",
+    "alembic (>=1.16.4,<2.0.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "aiosqlite (>=0.21.0,<0.22.0)"
 ]
 
 

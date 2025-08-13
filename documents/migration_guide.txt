@@ -1,0 +1,17 @@
+#############################################
+
+# One time setup
+
+poetry add alembic
+alembic init alembic
+-> change sqlalchemy.url in alembic.ini
+-> change target_metadata in alembic/env.py
+
+#############################################
+
+# When you make changes to your models
+
+alembic revision --autogenerate -m "migration message"
+alembic upgrade head
+
+#############################################
