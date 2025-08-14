@@ -1,11 +1,9 @@
+import uuid
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from app.repositories.repo_author import AuthorRepository
-from app.schemas import schema_author
-from app.models.model_author import Author
-
-import uuid
+from app.services.restapi_services.service_author import AuthorService
+from app.schemas.restapi_schemas import schema_author
 
 
 # --------------------------
@@ -14,11 +12,12 @@ import uuid
 async def get_authors(request: Request):
     try:
         user_id = uuid.UUID(request.path_params["user_id"])
-        session = request.state.session
-        repo = AuthorRepository(session)
-        authors = await repo.get_all_by_user_id(user_id)
-        authors_data = [schema_author.AuthorRead.from_orm(a).model_dump(mode="json") for a in authors]
-        return JSONResponse(authors_data)
+        service = AuthorService(request.state.session)
+
+        authors = await service.get_authors_by_user_id(user_id)
+        data = [schema_author.AuthorRead.from_orm(a).model_dump(mode="json") for a in authors]
+
+        return JSONResponse(data)
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
@@ -28,13 +27,12 @@ async def get_authors(request: Request):
 # --------------------------
 async def create_author(request: Request):
     try:
-        data = await request.json()
-        author_in = schema_author.AuthorCreate(**data)
-        session = request.state.session
-        repo = AuthorRepository(session)
-        author_data = author_in.model_dump()
-        author = Author(**author_data)
-        author = await repo.create(author)
+        payload = await request.json()
+        author_in = schema_author.AuthorCreate(**payload)
+
+        service = AuthorService(request.state.session)
+        author = await service.create_author(author_in)
+
         return JSONResponse(schema_author.AuthorRead.from_orm(author).model_dump(mode="json"))
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
@@ -47,11 +45,13 @@ async def get_author(request: Request):
     try:
         user_id = uuid.UUID(request.path_params["user_id"])
         author_id = uuid.UUID(request.path_params["author_id"])
-        session = request.state.session
-        repo = AuthorRepository(session)
-        author = await repo.get_by_id_and_user_id(author_id, user_id)
+
+        service = AuthorService(request.state.session)
+        author = await service.get_author_by_id_and_user(author_id, user_id)
+
         if not author:
             return JSONResponse({"error": "Author not found"}, status_code=404)
+
         return JSONResponse(schema_author.AuthorRead.from_orm(author).model_dump(mode="json"))
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
@@ -64,14 +64,17 @@ async def update_author(request: Request):
     try:
         user_id = uuid.UUID(request.path_params["user_id"])
         author_id = uuid.UUID(request.path_params["author_id"])
-        data = await request.json()
-        author_in = schema_author.AuthorUpdate(**data)
-        session = request.state.session
-        repo = AuthorRepository(session)
-        updated = await repo.update(author_id, user_id, author_in.dict(exclude_unset=True))
-        if not updated:
+
+        payload = await request.json()
+        author_in = schema_author.AuthorUpdate(**payload)
+
+        service = AuthorService(request.state.session)
+        updated_author = await service.update_author(author_id, user_id, author_in)
+
+        if not updated_author:
             return JSONResponse({"error": "Author not found"}, status_code=404)
-        return JSONResponse(schema_author.AuthorRead.from_orm(updated).model_dump(mode="json"))
+
+        return JSONResponse(schema_author.AuthorRead.from_orm(updated_author).model_dump(mode="json"))
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
@@ -83,11 +86,13 @@ async def delete_author(request: Request):
     try:
         user_id = uuid.UUID(request.path_params["user_id"])
         author_id = uuid.UUID(request.path_params["author_id"])
-        session = request.state.session
-        repo = AuthorRepository(session)
-        deleted = await repo.delete(author_id, user_id)
+
+        service = AuthorService(request.state.session)
+        deleted = await service.delete_author(author_id, user_id)
+
         if not deleted:
             return JSONResponse({"error": "Author not found"}, status_code=404)
+
         return JSONResponse({"status": "deleted"})
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)

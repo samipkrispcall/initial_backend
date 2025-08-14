@@ -1,12 +1,9 @@
+import uuid
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-from starlette.routing import Route
 
-from app.repositories.repo_user import UserRepository
-from app.schemas import schema_user
-from app.models import User
-
-import uuid
+from app.services.restapi_services.service_user import UserService
+from app.schemas.restapi_schemas.schema_user import UserCreate, UserUpdate, UserRead
 
 
 # --------------------------
@@ -14,11 +11,10 @@ import uuid
 # --------------------------
 async def get_users(request: Request):
     try:
-        session = request.state.session
-        repo = UserRepository(session)
-        users = await repo.get_all()
-        users_data = [schema_user.UserRead.from_orm(u).model_dump(mode="json") for u in users]
-        return JSONResponse(users_data)
+        service = UserService(request.state.session)
+        users = await service.get_all_users()
+        data = [UserRead.from_orm(u).model_dump(mode="json") for u in users]
+        return JSONResponse(data)
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
@@ -28,14 +24,13 @@ async def get_users(request: Request):
 # --------------------------
 async def create_user(request: Request):
     try:
-        data = await request.json()
-        user_in = schema_user.UserCreate(**data)
-        session = request.state.session
-        repo = UserRepository(session)
-        user_data = user_in.model_dump()
-        user = User(**user_data)
-        user = await repo.create(user)
-        return JSONResponse(schema_user.UserRead.from_orm(user).model_dump(mode="json"))
+        payload = await request.json()
+        user_in = UserCreate(**payload)
+
+        service = UserService(request.state.session)
+        user = await service.create_user(user_in)
+
+        return JSONResponse(UserRead.from_orm(user).model_dump(mode="json"))
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
@@ -46,12 +41,13 @@ async def create_user(request: Request):
 async def get_user(request: Request):
     try:
         user_id = uuid.UUID(request.path_params["user_id"])
-        session = request.state.session
-        repo = UserRepository(session)
-        user = await repo.get_by_id(user_id)
+        service = UserService(request.state.session)
+        user = await service.get_user_by_id(user_id)
+
         if not user:
             return JSONResponse({"error": "User not found"}, status_code=404)
-        return JSONResponse(schema_user.UserRead.from_orm(user).model_dump(mode="json"))
+
+        return JSONResponse(UserRead.from_orm(user).model_dump(mode="json"))
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
@@ -62,14 +58,16 @@ async def get_user(request: Request):
 async def update_user(request: Request):
     try:
         user_id = uuid.UUID(request.path_params["user_id"])
-        data = await request.json()
-        user_in = schema_user.UserUpdate(**data)
-        session = request.state.session
-        repo = UserRepository(session)
-        updated = await repo.update(user_id, user_in.dict(exclude_unset=True))
-        if not updated:
+        payload = await request.json()
+        user_in = UserUpdate(**payload)
+
+        service = UserService(request.state.session)
+        updated_user = await service.update_user(user_id, user_in)
+
+        if not updated_user:
             return JSONResponse({"error": "User not found"}, status_code=404)
-        return JSONResponse(schema_user.UserRead.from_orm(updated).model_dump(mode="json"))
+
+        return JSONResponse(UserRead.from_orm(updated_user).model_dump(mode="json"))
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
@@ -80,11 +78,12 @@ async def update_user(request: Request):
 async def delete_user(request: Request):
     try:
         user_id = uuid.UUID(request.path_params["user_id"])
-        session = request.state.session
-        repo = UserRepository(session)
-        deleted = await repo.delete(user_id)
+        service = UserService(request.state.session)
+
+        deleted = await service.delete_user(user_id)
         if not deleted:
             return JSONResponse({"error": "User not found"}, status_code=404)
+
         return JSONResponse({"status": "deleted"})
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)

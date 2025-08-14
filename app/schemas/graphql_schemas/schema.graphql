@@ -1,0 +1,70 @@
+# ========================
+# Types
+# ========================
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  created_at: String!
+  authors: [Author!]!
+  books: [Book!]!
+}
+
+type Author {
+  id: ID!
+  name: String!
+  email: String
+  created_at: String!
+  user: User!
+  books: [Book!]!
+}
+
+type Book {
+  id: ID!
+  title: String!
+  description: String
+  published_at: String
+  price: Float!
+  created_at: String!
+  author: Author!
+}
+
+# ========================
+# Queries
+# ========================
+
+type Query {
+  # Users
+  getUser(id: ID!): User!
+  getAllUsers: [User!]!
+
+  # Authors
+  getAuthor(id: ID!): Author!
+  getAllAuthors: [Author!]!
+
+  # Books
+  getBook(id: ID!): Book!
+  getAllBooks: [Book!]!
+}
+
+# ========================
+# Mutations
+# ========================
+
+type Mutation {
+  # User
+  createUser(username: String!, email: String!, password: String!): User!
+  updateUser(id: ID!, username: String, email: String, password: String): User!
+  deleteUser(id: ID!): Boolean!
+
+  # Author
+  createAuthor(name: String!, email: String, userId: ID!): Author!
+  updateAuthor(id: ID!, name: String, email: String): Author!
+  deleteAuthor(id: ID!): Boolean!
+
+  # Book
+  createBook(title: String!, description: String, published_at: String, price: Float!, authorId: ID!): Book!
+  updateBook(id: ID!, title: String, description: String, published_at: String, price: Float): Book!
+  deleteBook(id: ID!): Boolean!
+}

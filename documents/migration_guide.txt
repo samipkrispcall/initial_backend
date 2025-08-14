@@ -24,14 +24,12 @@ alembic upgrade head
 import os
 from dotenv import load_dotenv
 load_dotenv()
-# Get the DATABASE_URL_SYNC from environment variables
+
 DATABASE_URL_SYNC = os.getenv("DATABASE_URL_SYNC")
 if not DATABASE_URL_SYNC:
     raise ValueError("DATABASE_URL_SYNC is not provided")
 config.set_main_option("sqlalchemy.url", DATABASE_URL_SYNC)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
 from app.models import Base
 target_metadata = Base.metadata
 

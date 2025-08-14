@@ -13,7 +13,7 @@ if not DATABASE_URL_ASYNC:
 # Async engine
 engine = create_async_engine(
     DATABASE_URL_ASYNC,
-    echo=True,  # Turn off in production
+    echo=False,
     future=True
 )
 
