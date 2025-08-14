@@ -40,8 +40,9 @@ class BookRepository:
         return await self.get_by_id_and_author_id(book_id, author_id)
 
     async def delete(self, book_id: uuid.UUID, author_id: uuid.UUID) -> bool:
-        result = await self.session.execute(
-            delete(Book).where(Book.id == book_id, Book.author_id == author_id)
-        )
+        book = await self.session.scalar(select(Book).where(Book.id == book_id, Book.author_id == author_id))
+        if not book:
+            return False
+        await self.session.delete(book)
         await self.session.commit()
-        return result.rowcount > 0
+        return True

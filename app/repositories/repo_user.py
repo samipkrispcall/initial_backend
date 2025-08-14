@@ -40,6 +40,9 @@ class UserRepository:
         return await self.get_by_id(user_id)
 
     async def delete(self, user_id: uuid.UUID) -> bool:
-        result = await self.session.execute(delete(User).where(User.id == user_id))
+        user = await self.session.get(User, user_id)
+        if not user:
+            return False
+        await self.session.delete(user)
         await self.session.commit()
-        return result.rowcount > 0
+        return True

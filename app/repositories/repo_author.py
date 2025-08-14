@@ -40,8 +40,9 @@ class AuthorRepository:
         return await self.get_by_id_and_user_id(author_id, user_id)
 
     async def delete(self, author_id: uuid.UUID, user_id: uuid.UUID) -> bool:
-        result = await self.session.execute(
-            delete(Author).where(Author.id == author_id, Author.user_id == user_id)
-        )
+        author = await self.session.scalar(select(Author).where(Author.id == author_id, Author.user_id == user_id))
+        if not author:
+            return False
+        await self.session.delete(author)
         await self.session.commit()
-        return result.rowcount > 0
+        return True

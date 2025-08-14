@@ -1,0 +1,2 @@
+#Backend Architecture Workflow
+Route Handler → Schema Validation → Service → Repository → Database

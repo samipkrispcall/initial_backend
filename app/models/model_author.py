@@ -14,8 +14,8 @@ class Author(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(150), nullable=False, index=True)
     email = Column(String(254), index=True)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    user = relationship("User", back_populates="author")
-    books = relationship("Book", back_populates="author")
+    author_user = relationship("User", back_populates="user_authors")
+    author_books = relationship("Book", back_populates="book_author", cascade="all, delete-orphan")

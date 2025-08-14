@@ -17,7 +17,7 @@ class User(Base):
     password = Column(String(128), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    author = relationship("Author", back_populates="user", uselist=False)
+    user_authors = relationship("Author", back_populates="author_user", cascade="all, delete-orphan")
 
     def set_password(self, plain_password):
         self.password = pwd_context.hash(plain_password)

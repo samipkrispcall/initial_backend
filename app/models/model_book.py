@@ -19,4 +19,4 @@ class Book(Base):
     author_id = Column(UUID(as_uuid=True), ForeignKey("authors.id", ondelete="CASCADE"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    author = relationship("Author", back_populates="books")
+    book_author = relationship("Author", back_populates="author_books")
