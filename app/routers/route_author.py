@@ -2,8 +2,8 @@ import uuid
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from app.services.restapi_services.service_author import AuthorService
-from app.schemas.restapi_schemas import schema_author
+from app.services.sql_services.service_author import AuthorService
+from app.schemas.pydantic_schemas.schema_author import AuthorCreate, AuthorUpdate, AuthorRead
 
 
 # --------------------------
@@ -15,7 +15,7 @@ async def get_authors(request: Request):
         service = AuthorService(request.state.session)
 
         authors = await service.get_authors_by_user_id(user_id)
-        data = [schema_author.AuthorRead.from_orm(a).model_dump(mode="json") for a in authors]
+        data = [AuthorRead.from_orm(a).model_dump(mode="json") for a in authors]
 
         return JSONResponse(data)
     except Exception as e:
@@ -28,12 +28,12 @@ async def get_authors(request: Request):
 async def create_author(request: Request):
     try:
         payload = await request.json()
-        author_in = schema_author.AuthorCreate(**payload)
+        author_in = AuthorCreate(**payload)
 
         service = AuthorService(request.state.session)
         author = await service.create_author(author_in)
 
-        return JSONResponse(schema_author.AuthorRead.from_orm(author).model_dump(mode="json"))
+        return JSONResponse(AuthorRead.from_orm(author).model_dump(mode="json"))
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
@@ -52,7 +52,7 @@ async def get_author(request: Request):
         if not author:
             return JSONResponse({"error": "Author not found"}, status_code=404)
 
-        return JSONResponse(schema_author.AuthorRead.from_orm(author).model_dump(mode="json"))
+        return JSONResponse(AuthorRead.from_orm(author).model_dump(mode="json"))
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
@@ -66,7 +66,7 @@ async def update_author(request: Request):
         author_id = uuid.UUID(request.path_params["author_id"])
 
         payload = await request.json()
-        author_in = schema_author.AuthorUpdate(**payload)
+        author_in = AuthorUpdate(**payload)
 
         service = AuthorService(request.state.session)
         updated_author = await service.update_author(author_id, user_id, author_in)
@@ -74,7 +74,7 @@ async def update_author(request: Request):
         if not updated_author:
             return JSONResponse({"error": "Author not found"}, status_code=404)
 
-        return JSONResponse(schema_author.AuthorRead.from_orm(updated_author).model_dump(mode="json"))
+        return JSONResponse(AuthorRead.from_orm(updated_author).model_dump(mode="json"))
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 

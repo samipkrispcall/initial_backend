@@ -2,8 +2,8 @@ import uuid
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from app.services.restapi_services.service_user import UserService
-from app.schemas.restapi_schemas.schema_user import UserCreate, UserUpdate, UserRead
+from app.services.sql_services.service_user import UserService
+from app.schemas.pydantic_schemas.schema_user import UserCreate, UserUpdate, UserRead
 
 
 # --------------------------

@@ -2,8 +2,8 @@ from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
 
-from app.models.model_user import User
-from app.models.base import pwd_context
+from app.models.sql_models.model_user import User
+from app.models.sql_models.base import pwd_context
 
 import uuid
 

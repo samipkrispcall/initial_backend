@@ -72,6 +72,31 @@ typing_extensions = {version = ">=4.5", markers = "python_version < \"3.13\""}
 trio = ["trio (>=0.26.1)"]
 
 [[package]]
+name = "ariadne"
+version = "0.26.2"
+description = "Ariadne is a Python library for implementing GraphQL servers."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "ariadne-0.26.2-py3-none-any.whl", hash = "sha256:8d272c73a751d30a1c9c367318a317483588a51c335351d7342f23f109816a92"},
+    {file = "ariadne-0.26.2.tar.gz", hash = "sha256:607617f82760c039b2137b7c1200b475ea90ccf4ca42c0994926c0d8fdede908"},
+]
+
+[package.dependencies]
+graphql-core = ">=3.2.0,<3.2.6"
+starlette = ">0.17,<1.0"
+typing-extensions = ">=3.6.0"
+
+[package.extras]
+asgi-file-uploads = ["python-multipart (>=0.0.13)"]
+dev = ["ipdb"]
+telemetry = ["opentelemetry-api"]
+test = ["aiodataloader", "freezegun", "graphql-sync-dataloaders ; python_version > \"3.7\"", "httpx", "opentelemetry-api", "opentracing", "pytest", "pytest-asyncio", "pytest-benchmark", "pytest-cov", "pytest-mock", "python-multipart (>=0.0.13)", "syrupy", "werkzeug"]
+tracing = ["opentracing"]
+types = ["mypy (>=1.0.0)"]
+
+[[package]]
 name = "click"
 version = "8.2.1"
 description = "Composable command line interface toolkit"
@@ -135,6 +160,18 @@ files = [
 [package.dependencies]
 dnspython = ">=2.0.0"
 idna = ">=2.0.0"
+
+[[package]]
+name = "graphql-core"
+version = "3.2.5"
+description = "GraphQL implementation for Python, a port of GraphQL.js, the JavaScript reference implementation for GraphQL."
+optional = false
+python-versions = "<4,>=3.6"
+groups = ["main"]
+files = [
+    {file = "graphql_core-3.2.5-py3-none-any.whl", hash = "sha256:2f150d5096448aa4f8ab26268567bbfeef823769893b39c1a2e1409590939c8a"},
+    {file = "graphql_core-3.2.5.tar.gz", hash = "sha256:e671b90ed653c808715645e3998b7ab67d382d55467b7e2978549111bbabf8d5"},
+]
 
 [[package]]
 name = "greenlet"
@@ -666,5 +703,5 @@ standard = ["colorama (>=0.4) ; sys_platform == \"win32\"", "httptools (>=0.6.3)
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.12"
-content-hash = "895dbb4fa89b6bda0e621d1ca865a846652de8eb06eba3f6f02dd1cebb278f1b"
+python-versions = ">=3.12,<4"
+content-hash = "4d41713d13b7aaf375c889b9bb7b4f0b95006b9ffc759f5fb6f9c8970dd6a12b"

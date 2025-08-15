@@ -2,7 +2,7 @@ from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
 
-from app.models.model_book import Book
+from app.models.sql_models.model_book import Book
 
 import uuid
 

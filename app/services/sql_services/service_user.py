@@ -1,9 +1,9 @@
 import uuid
 from typing import List, Optional
 
-from app.repositories.restapi_repo.repo_user import UserRepository
-from app.schemas.restapi_schemas.schema_user import UserCreate, UserUpdate
-from app.models.model_user import User
+from app.repositories.sql_repo.repo_user import UserRepository
+from app.schemas.pydantic_schemas.schema_user import UserCreate, UserUpdate
+from app.models.sql_models.model_user import User
 
 
 class UserService:
