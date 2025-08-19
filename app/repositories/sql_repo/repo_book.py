@@ -23,7 +23,8 @@ class BookRepository:
         )
         return result.scalars().first()
 
-    async def create(self, book: Book) -> Book:
+    async def create(self, data: dict) -> Book:
+        book = Book(**data)
         self.session.add(book)
         await self.session.commit()
         await self.session.refresh(book)

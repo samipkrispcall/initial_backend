@@ -20,7 +20,8 @@ class UserRepository:
         result = await self.session.execute(select(User).where(User.id == user_id))
         return result.scalars().first()
 
-    async def create(self, user: User) -> User:
+    async def create(self, data: dict) -> User:
+        user = User(**data)
         user.set_password(user.password)
         self.session.add(user)
         await self.session.commit()

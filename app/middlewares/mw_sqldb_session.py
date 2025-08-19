@@ -9,5 +9,8 @@ class SQLDBSessionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         async with get_db() as session:
             request.state.session = session
-            response: Response = await call_next(request)
+            try:
+                response: Response = await call_next(request)
+            finally:
+                await session.close()
         return response

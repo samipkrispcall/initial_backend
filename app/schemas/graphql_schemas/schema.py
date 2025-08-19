@@ -3,6 +3,7 @@ from ariadne.asgi import GraphQL
 
 from app.resolvers.queries.queries import QueryResolver
 from app.resolvers.types.types import TypeResolver
+from app.utils.session_provider import get_session
 
 # Load SDL from schema.graphql
 type_defs = load_schema_from_path("app/schemas/graphql_schemas/schema.graphql")
@@ -33,5 +34,5 @@ schema = make_executable_schema(
 graphql_app = GraphQL(
     schema,
     debug=True,
-    context_value=lambda request: {"session": request.state.session}
+    context_value=lambda request: {"session": get_session(request)}
 )

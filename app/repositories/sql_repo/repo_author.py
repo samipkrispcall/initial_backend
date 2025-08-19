@@ -29,7 +29,8 @@ class AuthorRepository:
         )
         return result.scalars().first()
 
-    async def create(self, author: Author) -> Author:
+    async def create(self, data: dict) -> Author:
+        author = Author(**data)
         self.session.add(author)
         await self.session.commit()
         await self.session.refresh(author)

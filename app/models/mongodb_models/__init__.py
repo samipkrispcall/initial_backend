@@ -1,11 +1,9 @@
-from .base import Base
-from .model_user import User
-from .model_author import Author
-from .model_book import Book
+from app.models.mongodb_models.model_user import UserModel
+from app.models.mongodb_models.model_author import AuthorModel
+from app.models.mongodb_models.model_book import BookModel
 
 __all__ = [
-    "Base",
-    "User",
-    "Author",
-    "Book"
+    "UserModel",
+    "AuthorModel",
+    "BookModel"
     ]

@@ -1,4 +1,4 @@
-from app.services.sql_services.service_author import AuthorService
+from app.services.service_author import AuthorService
 
 
 class AuthorQueryResolver:

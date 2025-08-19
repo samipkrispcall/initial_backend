@@ -1,6 +1,6 @@
 from ariadne import ObjectType
-from app.services.sql_services.service_user import UserService
-from app.services.sql_services.service_book import BookService
+from app.services.service_user import UserService
+from app.services.service_book import BookService
 
 
 class AuthorTypeResolver:

@@ -1,5 +1,5 @@
 import uuid
-from app.services.sql_services.service_user import UserService
+from app.services.service_user import UserService
 
 class UserQueryResolver:
     def service(self, info):

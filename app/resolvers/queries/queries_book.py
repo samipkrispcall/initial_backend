@@ -1,4 +1,4 @@
-from app.services.sql_services.service_book import BookService
+from app.services.service_book import BookService
 
 
 class BookQueryResolver:
