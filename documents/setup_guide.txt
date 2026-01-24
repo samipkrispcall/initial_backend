@@ -1,0 +1,56 @@
+#########################################################
+
+# Install pyenv
+
+curl https://pyenv.run | bash
+
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv virtualenv-init -)"
+
+exec "$SHELL"
+
+pyenv --version
+
+pyenv install 3.9.13
+pyenv install 3.12.10
+
+pyenv versions
+
+#########################################################
+
+# Install poetry
+
+curl -sSL https://install.python-poetry.org | python3 -
+
+export PATH="$HOME/.local/bin:$PATH"
+
+poetry --version
+
+#########################################################
+
+# Setting up project
+
+pyenv local 3.12.10
+
+poetry init --no-interaction
+
+poetry env use $(pyenv which python)
+
+#########################################################
+
+# Check environment and activate
+
+echo $VIRTUAL_ENV
+
+echo $(which python)
+
+source $(poetry env info --path)/bin/activate
+
+echo $VIRTUAL_ENV
+
+echo $(which python)
+
+deactivate
+
+#########################################################

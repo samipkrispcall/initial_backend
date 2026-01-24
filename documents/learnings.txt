@@ -1,0 +1,7 @@
+#Backend Architecture Workflow
+Route Handler → Schema Validation → Service → Repository → Database
+
+
+# Limitations: 
+Created the author with any user_id (UUID) that doesnot even exist.
+Does not delete the child documents that reference it via a user_id.
